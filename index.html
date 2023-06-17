@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Rotating Cube with Images</title>
+    <style>
+      body { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="200" height="200"></canvas>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script>
+      // Create a scene
+      const scene = new THREE.Scene();
+
+      // Create a camera
+      const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+      camera.position.z = 5;
+
+      // Create a renderer
+      const canvas = document.getElementById('canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      renderer.setSize(200, 200);
+
+      // Create an array of texture URLs
+      const textureUrls = [
+    'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png',
+    'https://www.kasandbox.org/programming-images/avatars/primosaur-tree.png',
+    'https://www.kasandbox.org/programming-images/avatars/orange-juice-squid.png',
+   'https://www.kasandbox.org/programming-images/avatars/old-spice-man.png',
+'https://www.kasandbox.org/programming-images/avatars/old-spice-man-blue.png',
+    'https://www.kasandbox.org/programming-images/avatars/primosaur-ultimate.png'
+      ];
+
+      // Create an array to hold the cube materials
+      const cubeMaterials = [];
+
+      // Create a texture loader
+      const textureLoader = new THREE.TextureLoader();
+
+      // Load textures and create materials
+      let texturesLoaded = 0;
+      textureUrls.forEach((url, index) => {
+        textureLoader.load(url, (texture) => {
+          const material = new THREE.MeshBasicMaterial({ map: texture });
+          cubeMaterials[index] = material;
+          texturesLoaded++;
+
+          // Check if all textures are loaded
+          if (texturesLoaded === textureUrls.length) {
+            // Create a cube
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const cube = new THREE.Mesh(geometry, cubeMaterials);
+            scene.add(cube);
+
+            // Animation loop
+            function animate() {
+              requestAnimationFrame(animate);
+
+              // Rotate the cube
+              cube.rotation.x += 0.01;
+              cube.rotation.y += 0.01;
+
+              // Render the scene
+              renderer.render(scene, camera);
+            }
+
+            // Start the animation loop
+            animate();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
